@@ -1,31 +1,11 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ButtonPrevious : MonoBehaviour
 {
-    public GameObject[] images;  // Array of images in the storyboard
-    private int currentIndex = 0;
+    public StoryboardController storyboardController;
 
-    void Start()
+    public void GoToPreviousImage()
     {
-        ShowImage(currentIndex);
-    }
-
-    public void PreviousImage()
-    {
-        if (currentIndex > 0)
-        {
-            currentIndex--;
-            ShowImage(currentIndex);
-        }
-    }
-
-    private void ShowImage(int index)
-    {
-        for (int i = 0; i < images.Length; i++)
-        {
-            images[i].SetActive(i == index);
-        }
+        storyboardController.PreviousImage();
     }
 }
-
