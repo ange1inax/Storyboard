@@ -1,21 +1,24 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.IO;
 
 public class StoryboardController : MonoBehaviour
 {
-    public Sprite[] storyboardImages;  // Array of storyboard images
+    public Image imageDisplay;
+
+    private List<Sprite> storyboardImages = new List<Sprite>();
     private int currentIndex = 0;
-    private Image imageDisplay;
 
     void Start()
     {
-        imageDisplay = GetComponent<Image>();
+        LoadStoryboardImages();
         ShowImage(currentIndex);
     }
 
     public void NextImage()
     {
-        if (currentIndex < storyboardImages.Length - 1)
+        if (currentIndex < storyboardImages.Count - 1)
         {
             currentIndex++;
             ShowImage(currentIndex);
@@ -31,9 +34,26 @@ public class StoryboardController : MonoBehaviour
         }
     }
 
+    private void LoadStoryboardImages()
+    {
+        // Load sprites from a specific folder in the Assets directory
+        string folderPath = "Assets/StoryboardImages/";
+        DirectoryInfo dir = new DirectoryInfo(folderPath);
+        FileInfo[] info = dir.GetFiles("*.png"); // Change the extension based on your image type
+
+        foreach (FileInfo f in info)
+        {
+            string imagePath = "file://" + f.FullName;
+            Texture2D tex = new Texture2D(2, 2);
+            tex.LoadImage(File.ReadAllBytes(f.FullName));
+            Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+            storyboardImages.Add(sprite);
+        }
+    }
+
     private void ShowImage(int index)
     {
-        if (index >= 0 && index < storyboardImages.Length)
+        if (index >= 0 && index < storyboardImages.Count)
         {
             imageDisplay.sprite = storyboardImages[index];
         }
