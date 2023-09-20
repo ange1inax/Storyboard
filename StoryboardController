@@ -6,8 +6,10 @@ using System.IO;
 public class StoryboardController : MonoBehaviour
 {
     public Image imageDisplay;
+    public Text captionText;
 
-    private List<Sprite> storyboardImages = new List<Sprite>();
+    public List<Sprite> storyboardImages = new List<Sprite>();
+    public List<string> captions = new List<string>();
     private int currentIndex = 0;
 
     void Start()
@@ -36,7 +38,7 @@ public class StoryboardController : MonoBehaviour
 
     private void LoadStoryboardImages()
     {
-        // Load sprites from a specific folder in the Assets directory
+        // Load sprites and captions from a specific folder in the Assets directory
         string folderPath = "Assets/StoryboardImages/";
         DirectoryInfo dir = new DirectoryInfo(folderPath);
         FileInfo[] info = dir.GetFiles("*.png"); // Change the extension based on your image type
@@ -48,6 +50,18 @@ public class StoryboardController : MonoBehaviour
             tex.LoadImage(File.ReadAllBytes(f.FullName));
             Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
             storyboardImages.Add(sprite);
+
+            // Assume your captions have the same filename but with a .txt extension
+            string captionPath = "Assets/Captions/" + Path.GetFileNameWithoutExtension(f.Name) + ".txt";
+            if (File.Exists(captionPath))
+            {
+                string caption = File.ReadAllText(captionPath);
+                captions.Add(caption);
+            }
+            else
+            {
+                captions.Add("No caption available");
+            }
         }
     }
 
@@ -56,6 +70,7 @@ public class StoryboardController : MonoBehaviour
         if (index >= 0 && index < storyboardImages.Count)
         {
             imageDisplay.sprite = storyboardImages[index];
+            captionText.text = captions[index];
         }
     }
 }
