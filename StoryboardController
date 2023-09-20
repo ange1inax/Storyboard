@@ -1,0 +1,41 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class StoryboardController : MonoBehaviour
+{
+    public Sprite[] storyboardImages;  // Array of storyboard images
+    private int currentIndex = 0;
+    private Image imageDisplay;
+
+    void Start()
+    {
+        imageDisplay = GetComponent<Image>();
+        ShowImage(currentIndex);
+    }
+
+    public void NextImage()
+    {
+        if (currentIndex < storyboardImages.Length - 1)
+        {
+            currentIndex++;
+            ShowImage(currentIndex);
+        }
+    }
+
+    public void PreviousImage()
+    {
+        if (currentIndex > 0)
+        {
+            currentIndex--;
+            ShowImage(currentIndex);
+        }
+    }
+
+    private void ShowImage(int index)
+    {
+        if (index >= 0 && index < storyboardImages.Length)
+        {
+            imageDisplay.sprite = storyboardImages[index];
+        }
+    }
+}
